@@ -2,5 +2,17 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+<p>{{messege}}</p>
+{%if number > 10%}
+<p>number is greater than ten</p>
+{% elif number == 10 %}
+<p>number is exactly ten</p>
+{% endif %}
 <h1>we are in project</h1>
+<u1>
+    {% for project in projects %}
+    <li>Title: <a href="/projects/{{project.id}}"> {{project.title}} --- {{project.description}} </a></li>
+    {% endfor %}
+</u1>
+
 {% endblock content %}
