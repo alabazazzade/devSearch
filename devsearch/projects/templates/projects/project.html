@@ -2,17 +2,30 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+<h1>we are in projects</h1>
 <p>{{messege}}</p>
-{%if number > 10%}
-<p>number is greater than ten</p>
-{% elif number == 10 %}
-<p>number is exactly ten</p>
-{% endif %}
-<h1>we are in project</h1>
-<u1>
+<table>
+    <tr>
+        {% comment %} <th>id</th> {% endcomment %}
+        <th>Project</th>
+        <th>Votes</th>
+        <th>Ratio</th>
+        <th>link</th>
+        <th>modify</th>
+        <th>delete</th>
+        
+    </tr>
     {% for project in projects %}
-    <li>Title: <a href="/projects/{{project.id}}"> {{project.title}} --- {{project.description}} </a></li>
+        <tr>
+            {% comment %} <td>{{project.id}}</td> {% endcomment %}
+            <td>{{project.title}}</td>
+            <td>{{project.vote_total}}</td>
+            <td>{{project.vote_ratio}}</td>
+            <td><a href="/projects/{{project.id}}">link</a></td>
+            <td><a href="update-project/{{project.id}}">edit</a></td>
+            <td><a href="delete-project/{{project.id}}">delete</a></td>
+        </tr>
     {% endfor %}
-</u1>
+</table>
 
 {% endblock content %}
