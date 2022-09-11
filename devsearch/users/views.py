@@ -4,14 +4,17 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 # from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, profileform
 
+from .forms import CustomUserCreationForm, profileform
 from .models import profile
+from .utils import searchProfiles
 from projects.models import Project
 
 def profiles(request):
-    profiles = profile.objects.all()
-    context = {'profiles':profiles}
+
+    profiles, search_query = searchProfiles(request)
+    context = {'profiles':profiles, 'search_query':search_query}
+    
     return render(request, 'users/profiles.html', context)
 
 def userprofile(request, pk):

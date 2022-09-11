@@ -3,6 +3,8 @@ from projects.models import Project
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.core.mail import send_mail
+from devsearch import settings
 
 @receiver(post_save, sender=User)
 def createprofile(sender, instance, created, **kwargs):
@@ -13,6 +15,16 @@ def createprofile(sender, instance, created, **kwargs):
             user=user,
             email=user.email,  
         ) 
+
+        subject = 'Welcome to devsearch'
+        body = f'Thank you for creating an account in our website!' 
+        send_mail(
+            subject,
+            body,
+            settings.EMAIL_HOST_USER,
+            [Profile.email],
+            fail_silently=False,
+        )
 
 @receiver(post_save, sender=profile)
 def updateuser(sender, instance,created, **kwargs):

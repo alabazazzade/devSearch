@@ -4,13 +4,15 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Project
 from .forms import ProjectForm
+from .utils import searchprojects
 
 
 
 def project(request):
-    projects = Project.objects.all()
-    number = 10
-    return render(request, 'projects/project.html',{'number':number, 'projects':projects})
+
+    projects, search_prj = searchprojects(request)
+    return render(request, 'projects/project.html',
+    {'projects':projects, 'search_prj':search_prj})
 
 def projects(request, pk):
 
