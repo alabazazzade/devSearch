@@ -1,0 +1,16 @@
+<div class="pagination">
+    <ul class="container">
+      {% if projects.has_previous %}
+      <li><a href="?page={{projects.previous_page_number}}" >&#10094 </li> 
+      {% endif %}
+      
+      {% for page in custom_range %}
+      <li><a href="?page={{page}}" >{{page}}</li>
+      {% endfor %}
+
+      {% if projects.has_next %}
+      <li><a href="?page={{projects.next_page_number}}" >&#10095 </li> 
+      {% endif %}
+
+    </ul>
+</div>

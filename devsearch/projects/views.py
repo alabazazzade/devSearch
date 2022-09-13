@@ -2,18 +2,22 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
+
 from .models import Project
 from .forms import ProjectForm
-from .utils import searchprojects
+from .utils import searchprojects, projectpagination
 
 
 
 def project(request):
 
     projects, search_prj = searchprojects(request)
+    page, paginator, custom_range = projectpagination(request, projects, 6)
+    projects = paginator.page(page)
     return render(request, 'projects/project.html',
-    {'projects':projects, 'search_prj':search_prj})
-
+                {'projects':projects, 'search_prj':search_prj,
+                 'paginator':paginator, 'custom_range':custom_range})
+    
 def projects(request, pk):
 
     projectobj = Project.objects.get(id=pk)

@@ -2,6 +2,7 @@ from re import search
 from django.db.models import Q
 from .models import Project, Tag
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def searchprojects(request):
 
@@ -22,3 +23,29 @@ def searchprojects(request):
 
     projects = Project.objects.all()   
     return projects, search_prj
+
+def projectpagination(request, projects, results):
+    page = request.GET.get('page')
+    results = results
+    try:
+        paginator = Paginator(projects, results)
+        
+    except PageNotAnInteger:
+        page = 1
+        paginator = Paginator(projects, results)
+     
+    except EmptyPage:
+        page = paginator.num_pages
+        paginator = Paginator(projects, results)
+        
+
+    Right_limit = int(page) - 1
+    if Right_limit < 1:
+        Right_limit = 1
+    
+    Left_limit = int(page) + 1
+    if Left_limit > paginator.num_pages:
+        Left_limit = paginator.num_pages
+        
+    custom_range = range(Right_limit,Left_limit)
+    return page, paginator, custom_range
