@@ -29,16 +29,27 @@ def projectpagination(request, projects, results):
     results = results
     try:
         paginator = Paginator(projects, results)
+        print(page)
+        Right_limit = int(page) - 5
+        if Right_limit < 1:
+            Right_limit = 1
+    
+        Left_limit = int(page) + 5
+        if Left_limit > paginator.num_pages:
+            Left_limit = paginator.num_pages
         
-    except PageNotAnInteger:
+        custom_range = range(Right_limit,Left_limit)
+        # return page, paginator, custom_range
+        
+    except:
         page = 1
         paginator = Paginator(projects, results)
      
-    except EmptyPage:
-        page = paginator.num_pages
-        paginator = Paginator(projects, results)
+    # except EmptyPage:
+    #     page = paginator.num_pages
+    #     paginator = Paginator(projects, results)
         
-
+    print(page)
     Right_limit = int(page) - 1
     if Right_limit < 1:
         Right_limit = 1

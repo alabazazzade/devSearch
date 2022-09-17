@@ -1,10 +1,14 @@
+from email.message import Message
+from urllib.error import HTTPError
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import IntegrityError
+from django.contrib.auth.models import AnonymousUser
 
-
-from .models import Project
-from .forms import ProjectForm
+from .models import Project, Review
+from .forms import ProjectForm,ReviewForm
 from .utils import searchprojects, projectpagination
 
 
@@ -19,10 +23,30 @@ def project(request):
                  'paginator':paginator, 'custom_range':custom_range})
     
 def projects(request, pk):
+    try:
+        projectobj = Project.objects.get(id=pk)
+        tags = projectobj.tags.all()
+        reviews = projectobj.review_set.all()
+        form = ReviewForm()
 
-    projectobj = Project.objects.get(id=pk)
-    tags = projectobj.tags.all()
-    return render(request, 'projects/projects.html', {'project':projectobj, 'tags':tags})
+        if request.method == 'POST':
+            form = ReviewForm(request.POST)
+            review = form.save(commit=False)
+            review.project = projectobj
+            review.owner = request.user.profile
+            review.save()
+            projectobj.getVoteCount # this is written in the models and keeps vote total and vote ratio updated
+            messages.success(request,message='Your Review was updated successfully')
+            
+        return render(request, 'projects/projects.html', {'project':projectobj, 'tags':tags,
+                                                      'reviews':reviews, 'form':form})
+    except IntegrityError:
+        messages.error(request, message='You have already commented on this project')
+        return redirect('projects', pk=projectobj.id)
+    
+    except Exception as e:
+        messages.error(request, message='You have to login in order to leave a comment on a project')
+        return redirect('login')
 
 @login_required(login_url="login")
 def createProject(request):

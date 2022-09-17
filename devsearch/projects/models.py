@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 import uuid
 from users.models import profile
@@ -22,14 +23,23 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-vote_ratio','-vote_total']
 
+    @property
+    def getVoteCount(self):
+        reviews = self.review_set.all()
+        upVotes = reviews.filter(value='up').count()
+        total = reviews.count()
+        ratio = (upVotes / total) * 100
+        self.vote_ratio = ratio
+        self.vote_total = total
+        self.save()
 class Review(models.Model):
     VOTE_TYPE = (
         ('up', 'Up Vote'),
         ('down', 'Down Vote')
     )
-    #owner=
+    owner= models.ForeignKey(profile, on_delete=models.CASCADE, null=True)
     project=models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
@@ -39,6 +49,11 @@ class Review(models.Model):
 
     def __str__(self):
         return self.value
+
+    class Meta:
+        unique_together = [['owner', 'project']] # this way one owner cant leave reviews for a project more than once
+
+    
 
 class Tag(models.Model):
     name = models.CharField(max_length=200)
