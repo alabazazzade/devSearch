@@ -28,11 +28,11 @@
     <section class="devlist">
       <div class="container">
         <div class="grid grid--three">
-            
-            <div class="column card">
-                {% for profile in profiles %}
-                    <div class="dev">
-
+          
+          {% for profile in profiles %}
+            <div class="row">
+              <div class="card profile">
+                    {% comment %} <div class="dev"> {% endcomment %}
                     <a href="{%url 'userprofiles' profile.id %}" class="card__body">
                         <div class="dev__profile">
                         <img class="avatar avatar--md" src="{{profile.profile_image.url}}" alt="image" />
@@ -52,9 +52,9 @@
                             {% endfor %}
                         </div>
                     </a>
-                {% endfor %}
+                  {% comment %} </div> {% endcomment %}
             </div>
-            
+            {% endfor %}
           </div>
 
 
