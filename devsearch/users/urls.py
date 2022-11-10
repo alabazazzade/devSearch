@@ -12,6 +12,10 @@ urlpatterns = [
     path('register/', views.registeruser, name='register'),
     path('account/', views.userAccount, name='account'),
     path('editaccount/', views.editAccount, name='edit-account'),
+    
+    path('create-skill/', views.createSkill, name="create-skill"),
+    path('update-skill/<str:pk>/', views.updateSkill, name="update-skill"),
+    path('delete-skill/<str:pk>/', views.deleteSkill, name="delete-skill"),
 
     path('reset_password/', auth_views.PasswordResetView.as_view(),name="reset_password"),
     path('reset_password_sent/',auth_views.PasswordResetDoneView.as_view(),name="password_reset_done"),

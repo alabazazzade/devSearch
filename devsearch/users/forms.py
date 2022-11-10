@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import profile
+from .models import profile, skill
 
 class profileform(ModelForm):
     class Meta:
@@ -39,3 +39,16 @@ class CustomUserCreationForm(UserCreationForm):
       self.fields['username'].widget.attrs.update({'class':'input'})  
       self.fields['password1'].widget.attrs.update({'class':'input'})  
       self.fields['password2'].widget.attrs.update({'class':'input'})  
+      
+      
+class SkillForm(ModelForm):
+    class Meta:
+        model = skill
+        fields = '__all__'
+        exclude = ['owner']
+
+    def __init__(self, *args, **kwargs):
+        super(SkillForm, self).__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})

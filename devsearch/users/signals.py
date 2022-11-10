@@ -17,7 +17,7 @@ def createprofile(sender, instance, created, **kwargs):
         ) 
 
         subject = 'Welcome to devsearch'
-        body = f'Thank you for creating an account in our website!' 
+        body = f'Thank you for creating an account in our website!' + '\n' + 'devSearch team'
         send_mail(
             subject,
             body,
